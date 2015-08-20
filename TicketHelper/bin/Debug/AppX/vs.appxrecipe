@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>DESKTOP-954JTSO</Machine>
+    <WindowsUser>zikkr</WindowsUser>
+    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <TargetOsVersion>6.3</TargetOsVersion>
+    <TargetOsDescription>Windows 8.1</TargetOsDescription>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <PackageIdentityName>276f0379-8837-49f1-a296-c4142b8910e4</PackageIdentityName>
+    <IntermediateOutputPath>C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\obj\Debug\</IntermediateOutputPath>
+    <RegisteredManifestChecksum>3487C97A6A2B5453B486A0C29FB1B1F18EC33E1F5A8E16E522EA2C49B0F05E65</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>276f0379-8837-49f1-a296-c4142b8910e4_1.0.0.0_neutral__2rhhv0zccg5e4</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>276f0379-8837-49f1-a296-c4142b8910e4_2rhhv0zccg5e4!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>276f0379-8837-49f1-a296-c4142b8910e4</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=zikkr</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+    <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-08-12T12:34:38.000</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\TicketHelper.exe">
+      <PackagePath>TicketHelper.exe</PackagePath>
+      <Modified>2015-08-20T21:56:55.688</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\Assets\GreenLogo.png">
+      <PackagePath>Assets\GreenLogo.png</PackagePath>
+      <Modified>2015-08-09T09:57:56.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\Assets\Logo.scale-100.png">
+      <PackagePath>Assets\Logo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-08-08T12:25:18.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\Assets\SmallLogo.scale-100.png">
+      <PackagePath>Assets\SmallLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-08-08T12:28:30.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\Assets\SplashScreen.scale-100.png">
+      <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-08-08T10:35:40.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\Assets\StoreLogo.scale-100.png">
+      <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-08-08T12:29:16.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\backupDesign1.txt">
+      <PackagePath>backupDesign1.txt</PackagePath>
+      <Modified>2015-08-07T06:05:50.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\TicketHelper.xr.xml">
+      <PackagePath>TicketHelper.xr.xml</PackagePath>
+      <Modified>2015-08-12T15:02:36.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\App.xbf">
+      <PackagePath>App.xbf</PackagePath>
+      <Modified>2015-08-12T14:30:42.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\MainPage.xbf">
+      <PackagePath>MainPage.xbf</PackagePath>
+      <Modified>2015-08-12T15:02:38.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\SignInPage.xbf">
+      <PackagePath>SignInPage.xbf</PackagePath>
+      <Modified>2015-08-10T01:53:52.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\zikkr\Documents\Visual Studio 2015\Projects\TicketHelper\TicketHelper\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2015-08-12T12:34:36.000</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>
