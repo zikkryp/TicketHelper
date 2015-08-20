@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using TicketHelper.Utils;
 using Windows.Data.Json;
 using Windows.Security.Credentials;
 using Windows.Storage;

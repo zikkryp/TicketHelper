@@ -134,9 +134,6 @@
     <Compile Include="SignInPage.xaml.cs">
       <DependentUpon>SignInPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\RegexUtilities.cs" />
-    <Compile Include="Utils\TestClass.cs" />
-    <Compile Include="Utils\TestHistory.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

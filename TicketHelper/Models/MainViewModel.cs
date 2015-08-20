@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TicketHelper.Common;
-using TicketHelper.Utils;
 using Windows.Security.Credentials;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
