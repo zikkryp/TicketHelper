@@ -431,7 +431,6 @@ namespace TicketHelper.Models
 
         private void SetContent()
         {
-            //await new MessageDialog(selectedType.ToString()).ShowAsync();
             Content = Repository.GetContent(selectedProduct, selectedLanguage, selectedType);
         }
 
@@ -441,7 +440,7 @@ namespace TicketHelper.Models
 
         private async void GetUser()
         {
-            this.User = await this.storage.GetUser();
+            User = await this.storage.GetUser();
         }
 
         protected void TryGetCredentials()
@@ -471,22 +470,22 @@ namespace TicketHelper.Models
 
             if (this.address == null)
             {
-                this.ValidationMessage = "Address field cannot be empty!";
+                ValidationMessage = "Address field cannot be empty!";
 
                 return false;
             }
 
             if (!regex.IsMatch(this.address))
             {
-                this.ValidationColor = "Red";
-                this.ValidationMessage = "Invalid address format!";
+                ValidationColor = "Red";
+                ValidationMessage = "Invalid address format!";
 
                 return false;
             }
             else
             {
-                this.ValidationColor = "Black";
-                this.ValidationMessage = string.Empty;
+                ValidationColor = "Black";
+                ValidationMessage = string.Empty;
             }
 
             return true;
