@@ -62,7 +62,7 @@
                 </StackPanel>
                 <Button Content="SEND" Command="{Binding SendCommand}" BorderThickness="0" Style="{StaticResource GreenButton}" FontWeight="Light" FontSize="24" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="7,0,7,0" Grid.Row="2"/>
                 <!--<ProgressBar IsIndeterminate="True" Visibility="{Binding ProgressBarVisibility}" Style="{StaticResource ProgressBarGreenStyle}" Margin="10,0,10,0" Grid.Row="3"/>-->
-                <ListView Header="History:" ItemsSource="{Binding DisplayedHistory.Items}" IsItemClickEnabled="True" SelectionMode="None" FontWeight="Light" FontSize="17" Margin="10" Grid.Row="4">
+                <ListView Header="History:" ItemsSource="{Binding History.Items}" IsItemClickEnabled="True" SelectionMode="None" FontWeight="Light" FontSize="17" Margin="10" Grid.Row="4">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -74,7 +74,7 @@
                                 <TextBlock Text="{Binding Address}" FontWeight="Light" FontSize="14" Grid.Column="0"/>
                                 <TextBlock Text="{Binding Id}" FontWeight="Light" FontSize="14" HorizontalAlignment="Left" Grid.Column="1"/>
                                 <ProgressBar IsIndeterminate="True" Style="{StaticResource ProgressBarGreenStyle}" Visibility="{Binding ProgressVisibility}" HorizontalAlignment="Stretch" Margin="5,0,5,0" Grid.Column="1"/>
-                                <SymbolIcon Symbol="ReportHacked" Foreground="Red" Visibility="{Binding FailVisibility}" Grid.Column="2"/>
+                                <SymbolIcon Symbol="ReportHacked" Foreground="Red" Visibility="{Binding ErrorVisibility}" Grid.Column="2"/>
                                 <Path x:Name="CheckGlyph" Data="F1 M 0,58 L 2,56 L 6,60 L 13,51 L 15,53 L 6,67 z" Fill="Green" Visibility="{Binding SuccessVisibility}" FlowDirection="LeftToRight" Height="25" Opacity="100" Stretch="Fill" Width="25" Grid.Column="2"/>
                             </Grid>
                         </DataTemplate>
