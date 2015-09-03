@@ -44,6 +44,7 @@ namespace TicketHelper.Models
                 return "Diagnostic Report";
             }
         }
+
         public string Address
         {
             get
@@ -57,6 +58,7 @@ namespace TicketHelper.Models
                 NotifyPropertyChanged("Address");
             }
         }
+
         public string Content
         {
             get
@@ -69,6 +71,7 @@ namespace TicketHelper.Models
                 content = value;
             }
         }
+
         public bool IsSent
         {
             get
@@ -80,11 +83,12 @@ namespace TicketHelper.Models
             {
                 isSent = value;
 
-                if (IsSent)
+                if (isSent)
                 {
                     SuccessVisibility = Visibility.Visible;
+                    
                 }
-                else if (IsSent == false)
+                else if (isSent == false)
                 {
                     ErrorVisibility = Visibility.Visible;
                 }
@@ -132,6 +136,7 @@ namespace TicketHelper.Models
                 NotifyPropertyChanged("ProgressVisibility");
             }
         }
+
         public Visibility SuccessVisibility
         {
             get
@@ -145,6 +150,7 @@ namespace TicketHelper.Models
                 NotifyPropertyChanged("SuccessVisibility");
             }
         }
+
         public Visibility ErrorVisibility
         {
             get
