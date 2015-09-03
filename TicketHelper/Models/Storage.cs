@@ -175,10 +175,14 @@ namespace TicketHelper.Models
         public async Task SaveHistory(History history)
         {
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("History.json", CreationCollisionOption.OpenIfExists);
-
             string contents = await SerializeHistory(history);
-
             await FileIO.WriteTextAsync(file, contents);
+        }
+
+        public async Task CleanHistory()
+        {
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("History.json", CreationCollisionOption.OpenIfExists);
+            await file.DeleteAsync();
         }
 
         public async Task<History> GetHistory()
