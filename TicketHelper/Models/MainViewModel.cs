@@ -18,7 +18,7 @@ namespace TicketHelper.Models
         private int id;
         private string username;
         private string password;
-        
+
         private ICommand signOutCommand;
         private ICommand sendCommand;
         private ICommand sendFailedItemsCommand;
@@ -28,43 +28,36 @@ namespace TicketHelper.Models
         private ICommand showFailedCommand;
         private ICommand showSentCommand;
         private ICommand cleanHistoryCommand;
-        protected Storage storage;
-        protected Page page;
+        private User user;
+        private TicketRepository repository;
+        private History history;
+        private IEnumerable<Language> languages;
         private string address;
         private string content;
-        
-        private History history;
-        private History displayedHistory;
         private string validationColor = "Black";
         private string validationMessage;
-        private User user;
-
-        private TicketRepository repository;
-        private IEnumerable<Language> languages;
         private int selectedProduct = 0;
         private int selectedLanguage = 0;
         private int selectedType = 0;
 
+        protected Storage storage;
+        protected Page page;
         protected HelperClient client;
 
         public MainViewModel(Page page)
         {
-            Repository = new TicketRepository();
-
             this.page = page;
-            this.username = string.Empty;
-            this.password = string.Empty;
-            
-            this.storage = new Storage();
-            this.client = new HelperClient();
-            this.history = new History();
-            this.History.Items = new List<Ticket>();
-            this.displayedHistory = new History();
-            DisplayedHistory.Items = new List<Ticket>();
-            TryGetCredentials();
-            GetTicketRepository();
-            GetUser();
-            GetHistory();
+            username = string.Empty;
+            password = string.Empty;
+            storage = new Storage();
+            client = new HelperClient();
+            history = new History();
+            history.Items = new List<Ticket>();
+            Repository = new TicketRepository();
+            tryGetCredentials();
+            getTicketRepository();
+            getUser();
+            getHistory();
         }
 
         #region Commands
@@ -74,8 +67,8 @@ namespace TicketHelper.Models
             get
             {
                 signOutCommand = new RelayCommand(
-                    () => this.TrySignOut(),
-                    () => this.CanSignOut());
+                    () => this.trySignOut(),
+                    () => this.canSignOut());
 
                 return signOutCommand;
             }
@@ -86,8 +79,8 @@ namespace TicketHelper.Models
             get
             {
                 sendCommand = new RelayCommand(
-                    () => this.TrySend(),
-                    () => this.CanSend());
+                    () => this.trySend(),
+                    () => this.canSend());
 
                 return sendCommand;
             }
@@ -98,8 +91,8 @@ namespace TicketHelper.Models
             get
             {
                 sendFailedItemsCommand = new RelayCommand(
-                    () => this.SendFailedItems(),
-                    () => this.CanSendFailedItems());
+                    () => this.sendFailedItems(),
+                    () => this.canSendFailedItems());
 
                 return sendFailedItemsCommand;
             }
@@ -110,8 +103,8 @@ namespace TicketHelper.Models
             get
             {
                 return copyCommand = new RelayCommand(
-                    () => this.CopyIds(),
-                    () => this.CanCopy());
+                    () => this.copyIds(),
+                    () => this.canCopy());
             }
         }
 
@@ -120,7 +113,7 @@ namespace TicketHelper.Models
             get
             {
                 showAllCommand = new RelayCommand(
-                    () => this.ShowAll(),
+                    () => this.showAll(),
                     () => true);
 
                 return showAllCommand;
@@ -132,7 +125,7 @@ namespace TicketHelper.Models
             get
             {
                 showFailedCommand = new RelayCommand(
-                    () => this.ShowFailed(),
+                    () => this.showFailed(),
                     () => true);
 
                 return showFailedCommand;
@@ -144,7 +137,7 @@ namespace TicketHelper.Models
             get
             {
                 showSentCommand = new RelayCommand(
-                    () => this.ShowSent(),
+                    () => this.showSent(),
                     () => true);
 
                 return showSentCommand;
@@ -156,24 +149,22 @@ namespace TicketHelper.Models
             get
             {
                 cleanHistoryCommand = new RelayCommand(
-                    () => this.CleanHistory(),
+                    () => this.cleanHistory(),
                     () => true);
 
                 return cleanHistoryCommand;
             }
         }
 
-        public History DisplayedHistory
+        public ICommand SaveCommand
         {
             get
             {
-                return displayedHistory;
-            }
+                saveCommand = new RelayCommand(
+                    () => this.saveHistory(),
+                    () => this.canSave());
 
-            set
-            {
-                displayedHistory = value;
-                NotifyPropertyChanged("DisplayedHistory");
+                return saveCommand;
             }
         }
 
@@ -204,7 +195,7 @@ namespace TicketHelper.Models
             set
             {
                 languages = value;
-                SetContent();
+                setContent();
                 NotifyPropertyChanged("Languages");
             }
         }
@@ -221,7 +212,7 @@ namespace TicketHelper.Models
                 selectedProduct = value;
                 Languages = repository.DiagnosticReport.Items[selectedProduct].Items;
                 SelectedLanguage = 0;
-                SetContent();
+                setContent();
                 NotifyPropertyChanged("SelectedProduct");
             }
         }
@@ -236,6 +227,12 @@ namespace TicketHelper.Models
             set
             {
                 selectedType = value;
+
+                if (Languages.Count() > 0)
+                {
+                    SelectedLanguage = 0;
+                }
+
                 if (selectedType == 1)
                 {
                     Languages = repository.Reconnection.Items;
@@ -245,7 +242,7 @@ namespace TicketHelper.Models
                     Languages = repository.DiagnosticReport.Items[selectedProduct].Items;
                 }
                 SelectedLanguage = 0;
-                SetContent();
+                setContent();
                 NotifyPropertyChanged("SelectedType");
             }
         }
@@ -260,7 +257,7 @@ namespace TicketHelper.Models
             set
             {
                 selectedLanguage = value;
-                SetContent();
+                setContent();
                 NotifyPropertyChanged("SelectedLanguage");
             }
         }
@@ -391,18 +388,6 @@ namespace TicketHelper.Models
             }
         }
 
-        public ICommand SaveCommand
-        {
-            get
-            {
-                saveCommand = new RelayCommand(
-                    ()=> this.SaveHistory(),
-                    ()=> this.CanSave());
-
-                return saveCommand;
-            }
-        }
-
         public History History
         {
             get
@@ -421,15 +406,15 @@ namespace TicketHelper.Models
 
         #region Ticket & Content Initialization
 
-        private async void GetTicketRepository()
+        private async void getTicketRepository()
         {
             Repository = await TicketSource.GetTicketAsync();
 
             SelectedProduct = 0;
-            SelectedLanguage = 0;   
+            SelectedLanguage = 0;
         }
 
-        private void SetContent()
+        private void setContent()
         {
             Content = Repository.GetContent(selectedProduct, selectedLanguage, selectedType);
         }
@@ -438,12 +423,12 @@ namespace TicketHelper.Models
 
         #region User & Repository & Validation & Credentials
 
-        private async void GetUser()
+        private async void getUser()
         {
             User = await this.storage.GetUser();
         }
 
-        protected void TryGetCredentials()
+        protected void tryGetCredentials()
         {
             PasswordCredential credentials = storage.GetCredentials();
 
@@ -455,7 +440,7 @@ namespace TicketHelper.Models
             }
         }
 
-        private bool ValidateEmail()
+        private bool validateEmail()
         {
             if (this.address == null)
             {
@@ -495,21 +480,23 @@ namespace TicketHelper.Models
 
         #region SignOut
 
-        private bool CanSignOut()
+        private bool canSignOut()
         {
             return true;
         }
 
-        private async void TrySignOut()
+        private async void trySignOut()
         {
             MessageDialog messageDialog = new MessageDialog("Do you really want to sign out?", "Ticket Helper");
-            messageDialog.Commands.Add(new UICommand("Sign Out", new UICommandInvokedHandler(this.SignOut)));
-            messageDialog.Commands.Add(new UICommand("Sign Out and Remove Personal Data", new UICommandInvokedHandler(this.SignOutAndRemoveData)));
-            messageDialog.Commands.Add(new UICommand("NO"));
+
+            messageDialog.Commands.Add(new UICommand("SIGN OUT", new UICommandInvokedHandler(this.signOut)));
+            messageDialog.Commands.Add(new UICommand("SIGN OUT AND REMOVE PERSONAL DATA", new UICommandInvokedHandler(this.signOutAndRemoveData)));
+            messageDialog.Commands.Add(new UICommand("CANCEL"));
+
             await messageDialog.ShowAsync();
         }
 
-        private void SignOut(IUICommand command)
+        private void signOut(IUICommand command)
         {
             if (this.page.Frame.CanGoBack)
             {
@@ -521,7 +508,7 @@ namespace TicketHelper.Models
             }
         }
 
-        private void SignOutAndRemoveData(IUICommand command)
+        private void signOutAndRemoveData(IUICommand command)
         {
             storage.RemoveCredentials();
 
@@ -539,7 +526,7 @@ namespace TicketHelper.Models
 
         #region Copy Command
 
-        private async void CopyIds()
+        private async void copyIds()
         {
             string tmp = string.Empty;
 
@@ -558,13 +545,13 @@ namespace TicketHelper.Models
                 dataPackage.SetText(tmp);
                 Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await new MessageDialog(e.Message, "Clipboard error").ShowAsync();
             }
         }
 
-        private bool CanCopy()
+        private bool canCopy()
         {
             return true;
         }
@@ -573,14 +560,17 @@ namespace TicketHelper.Models
 
         #region Send
 
-        private bool CanSend()
+        private bool canSend()
         {
             return true;
         }
 
-        private void TrySend()
+        private void trySend()
         {
-            if (!ValidateEmail())
+            //testMethod();
+            //return;
+
+            if (!validateEmail())
             {
                 return;
             }
@@ -589,33 +579,38 @@ namespace TicketHelper.Models
             ticket.Address = this.address;
             ticket.Content = this.content;
 
-            if (!this.history.Items.Contains(ticket))
-            {
-                Send(ticket);
-            }
-            else
-            {
-                this.ValidationMessage = "Ticket has already been sent!";
-            }
+            history.Items.Add(ticket);
+            History.Items = new List<Ticket>(history.Items);
+
+            send(ticket);
+
+            //if (!this.history.Items.Contains(ticket))
+            //{
+            //    Send(ticket);
+            //}
+            //else
+            //{
+            //    this.ValidationMessage = "Ticket has already been sent!";
+            //}
         }
 
-        private async void Send(Ticket ticket)
-        {
-            await client.SendTicket(ticket);
-        }
-
-        private void SendFailedItems()
+        private void sendFailedItems()
         {
             foreach (Ticket ticket in history.Items)
             {
                 if (!ticket.IsSent && !ticket.IsProcessing)
                 {
-                    Send(ticket);
+                    send(ticket);
                 }
             }
         }
 
-        private bool CanSendFailedItems()
+        private async void send(Ticket ticket)
+        {
+            await client.SendTicket(ticket);
+        }
+
+        private bool canSendFailedItems()
         {
             return true;
         }
@@ -624,31 +619,31 @@ namespace TicketHelper.Models
 
         #region Save and Open History
 
-        private bool CanSave()
+        private bool canSave()
         {
             return true;
         }
 
-        private async void SaveHistory()
+        private async void saveHistory()
         {
             try
             {
                 await storage.SaveHistory(history);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await new MessageDialog(e.Message).ShowAsync();
             }
         }
 
-        private async void GetHistory()
+        private async void getHistory()
         {
             try
             {
                 this.History = await storage.GetHistory();
-                ShowAll();
+                showAll();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await new MessageDialog(e.Message, "Get History").ShowAsync();
             }
@@ -658,28 +653,32 @@ namespace TicketHelper.Models
 
         #region More menu commands
 
-        private void ShowAll()
+        private void showAll()
         {
             if (this.history.Items.Count > 0)
             {
-                this.DisplayedHistory.Items = new List<Ticket>(this.history.Items);
+                //this.DisplayedHistory.Items = new List<Ticket>(this.history.Items);
             }
         }
 
-        private void ShowSent()
+        private void showSent()
         {
-            this.DisplayedHistory.Items = new List<Ticket>(this.history.Items.Where(e => e.IsSent == true));
+            //this.DisplayedHistory.Items = new List<Ticket>(this.history.Items.Where(e => e.IsSent == true));
         }
 
-        private void ShowFailed()
+        private void showFailed()
         {
-            this.DisplayedHistory.Items = new List<Ticket>(this.history.Items.Where(e => e.IsSent == false));
+            //this.DisplayedHistory.Items = new List<Ticket>(this.history.Items.Where(e => e.IsSent == false));
         }
 
-        private void CleanHistory()
+        private async void cleanHistory()
         {
-            this.History.Items = new List<Ticket>();
-            this.DisplayedHistory.Items = new List<Ticket>();
+            if (history.Items.Count > 0)
+            {
+                this.History.Items = new List<Ticket>();
+                //this.DisplayedHistory.Items = new List<Ticket>();
+                await this.storage.CleanHistory();
+            }
         }
 
         #endregion
