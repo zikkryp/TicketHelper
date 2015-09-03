@@ -136,12 +136,12 @@ namespace TicketHelper.Models
                 //    ticket.Succeed = true;
                 //    ticket.SuccessVisibility = Windows.UI.Xaml.Visibility.Visible;
                 //}
-
+                ticket.ErrorVisibility = Windows.UI.Xaml.Visibility.Collapsed;
                 ticket.IsSent = true;
             }
             catch (Exception)
             {
-                ticket.IsSent = false;
+                //ticket.IsSent = false;
             }
             finally
             {
