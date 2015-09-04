@@ -417,6 +417,11 @@ namespace TicketHelper.Models
         private void setContent()
         {
             Content = Repository.GetContent(selectedProduct, selectedLanguage, selectedType);
+
+            if (selectedType == 1)
+            {
+                Content = content.Replace("sincerely,", string.Format("sincerely, {0}", user.Username));
+            }
         }
 
         #endregion
@@ -567,31 +572,23 @@ namespace TicketHelper.Models
 
         private void trySend()
         {
-            //testMethod();
-            //return;
-
             if (!validateEmail())
             {
                 return;
             }
 
             Ticket ticket = new Ticket();
-            ticket.Address = this.address;
-            ticket.Content = this.content;
+            ticket.Address = address;
+            ticket.Content = content;
+            ticket.Product = (ProductEnum)selectedProduct;
+            ticket.TypeId = selectedType;
 
             history.Items.Add(ticket);
             History.Items = new List<Ticket>(history.Items);
 
             send(ticket);
 
-            //if (!this.history.Items.Contains(ticket))
-            //{
-            //    Send(ticket);
-            //}
-            //else
-            //{
-            //    this.ValidationMessage = "Ticket has already been sent!";
-            //}
+            Address = string.Empty;
         }
 
         private void sendFailedItems()
