@@ -15,6 +15,7 @@ namespace TicketHelper.Models
         private int typeId = 0;
         private bool isSent = false;
         private bool isProcessing;
+        private ProductEnum product;
         
         private Visibility progressVisibility = Visibility.Collapsed;
         private Visibility successVisibility = Visibility.Collapsed;
@@ -36,7 +37,7 @@ namespace TicketHelper.Models
         {
             get
             {
-                if (this.typeId == 1)
+                if (this.TypeId == 1)
                 {
                     return "Remote Assistance";
                 }
@@ -165,7 +166,33 @@ namespace TicketHelper.Models
             }
         }
 
-        
+        public ProductEnum Product
+        {
+            get
+            {
+                return product;
+            }
+
+            set
+            {
+                product = value;
+                NotifyPropertyChanged("Product");
+            }
+        }
+
+        public int TypeId
+        {
+            get
+            {
+                return typeId;
+            }
+
+            set
+            {
+                typeId = value;
+                NotifyPropertyChanged("TypeId");
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -198,5 +225,11 @@ namespace TicketHelper.Models
         {
             return this.Id.ToString();
         }
+    }
+
+    public enum ProductEnum
+    {
+        RA_Mac_Keeper = 0,
+        RA_PC_Keeper = 1
     }
 }
