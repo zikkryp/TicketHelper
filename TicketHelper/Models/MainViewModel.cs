@@ -583,7 +583,8 @@ namespace TicketHelper.Models
             ticket.Product = (ProductEnum)selectedProduct;
             ticket.TypeId = selectedType;
 
-            history.Items.Add(ticket);
+            //history.Items.Add(ticket);
+            history.Items.Insert(0, ticket);
             History.Items = new List<Ticket>(history.Items);
 
             send(ticket);
