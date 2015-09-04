@@ -103,17 +103,19 @@ namespace TicketHelper.Models
 
             try
             {
-                //HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://crm.kromtech.net/?APP=003&MOD=tickets&action=respond_form");
-                //this.cookies = await storage.ReadCookies();
-                //request.CookieContainer = this.cookies;
-                //request.Method = "POST";
-                //request.ContentType = "application/x-www-form-urlencoded";
-                //stream = await request.GetRequestStreamAsync();
-                //string postString = string.Format("message_srv=kromtech.com&message_from=00077&message_to={0}&message_subject={1}&cval_value_Product={2}&cval_value_Language=English&cval_value_Issue=Technical&cval_value_Technical Problem_7977=Other technical&message={3}&send=1", ticket.Address, ticket.Subject, ticket.Product, ticket.Content);
-                //byte[] buffer = Encoding.UTF8.GetBytes(postString);
-                //await stream.WriteAsync(buffer, 0, buffer.Length);
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://crm.kromtech.net/?APP=003&MOD=tickets&action=respond_form");
+                this.cookies = await storage.ReadCookies();
+                request.CookieContainer = this.cookies;
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                stream = await request.GetRequestStreamAsync();
+                string postString = string.Format("message_srv=kromtech.com&message_from=00077&message_to={0}&message_subject={1}&cval_value_Product={2}&cval_value_Language=English&cval_value_Issue=Technical&cval_value_Technical Problem_7977=Other technical&message={3}&send=1", ticket.Address, ticket.Subject, ticket.Product, ticket.Content);
+                byte[] buffer = Encoding.UTF8.GetBytes(postString);
+                await stream.WriteAsync(buffer, 0, buffer.Length);
+                //string content = string.Format("{0}\n{1}\n{2}", ticket.Product, ticket.Subject, ticket.TypeId);
+                //await new MessageDialog(content).ShowAsync();
 
-                await Task.Delay(3000);
+                //await Task.Delay(3000);
 
                 //if (fail)
                 //{
@@ -121,27 +123,28 @@ namespace TicketHelper.Models
                 //    throw new Exception("Error");
                 //}
 
-                ticket.Id = ticket.Address.GetHashCode() > 0 ? ticket.Address.GetHashCode() : ticket.Address.GetHashCode() * -1;
+                //ticket.Id = ticket.Address.GetHashCode() > 0 ? ticket.Address.GetHashCode() : ticket.Address.GetHashCode() * -1;
 
                 //fail = true;
 
                 //ticket was sent
-                //response = (HttpWebResponse)await request.GetResponseAsync();
+                response = (HttpWebResponse)await request.GetResponseAsync();
 
-                //if (response.StatusCode == HttpStatusCode.OK)
-                //{
-                //    reader = new StreamReader(response.GetResponseStream());
-                //    string content = await reader.ReadToEndAsync();
-                //    ticket.Id = Convert.ToInt32(content.Substring(content.IndexOf("ticket_id="), 30).Split('=')[1].Split('\'')[0]);
-                //    ticket.Succeed = true;
-                //    ticket.SuccessVisibility = Windows.UI.Xaml.Visibility.Visible;
-                //}
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    reader = new StreamReader(response.GetResponseStream());
+                    string content = await reader.ReadToEndAsync();
+                    ticket.Id = Convert.ToInt32(content.Substring(content.IndexOf("ticket_id="), 30).Split('=')[1].Split('\'')[0]);
+                    ticket.IsSent = true;
+                    ticket.SuccessVisibility = Windows.UI.Xaml.Visibility.Visible;
+                }
+
                 ticket.ErrorVisibility = Windows.UI.Xaml.Visibility.Collapsed;
                 ticket.IsSent = true;
             }
             catch (Exception)
             {
-                //ticket.IsSent = false;
+                ticket.IsSent = false;
             }
             finally
             {
@@ -174,8 +177,8 @@ namespace TicketHelper.Models
             string jsonString = string.Empty;
 
             jsonString = await FileIO.ReadTextAsync(file, Windows.Storage.Streams.UnicodeEncoding.Utf8);
-
-            if (jsonString.Equals(string.Empty))
+            
+            if (jsonString.Equals(string.Empty) && jsonString == null)
             {
                 HttpClient client = null;
 
