@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
+using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace TicketHelper.Models
 {
@@ -405,11 +407,38 @@ namespace TicketHelper.Models
 
         private async Task GetAsync()
         {
-            HttpClient client = new HttpClient();
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("Reports.json", CreationCollisionOption.OpenIfExists);
 
-            string jsonString = await client.GetStringAsync("https://dl.dropboxusercontent.com/u/64185161/Ticket.json");
+            string jsonString = await FileIO.ReadTextAsync(file, Windows.Storage.Streams.UnicodeEncoding.Utf8);
 
-            if (jsonString == null && jsonString == string.Empty)
+            if (jsonString == string.Empty)
+            {
+                HttpClient client = null;
+
+                try
+                {
+                    client = new HttpClient();
+                    jsonString = await client.GetStringAsync("https://dl.dropboxusercontent.com/u/64185161/Reports.json");
+
+                    if (jsonString != null && jsonString != string.Empty)
+                    {
+                        await FileIO.WriteTextAsync(file, jsonString);
+                    }
+                }
+                catch (Exception e)
+                {
+                    await new MessageDialog(e.Message, "Get Reports Error").ShowAsync();
+                }
+                finally
+                {
+                    if (client != null)
+                    {
+                        client.Dispose();
+                    }
+                }
+            }
+
+            if (jsonString.Equals(string.Empty) && jsonString == null)
             {
                 return;
             }
